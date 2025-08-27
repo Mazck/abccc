@@ -1,0 +1,140 @@
+Goat.newVersionDetected=您正在使用版本 %1，最新版本为 %2。请通过在控制台中输入命令 %3 来更新，以获得更好的使用体验。
+Goat.autoRestart1=机器人将在 %1 后自动重启。
+Goat.autoRestart2=机器人将通过计划任务在 %1 后自动重启。
+Goat.googleApiTokenExpired=Google API 的刷新令牌已过期或被撤销，请在 https://developers.google.com/oauthplayground/ 获取新令牌。
+
+login.currentlyLogged=正在登录中…
+login.notFoundDirAccount=找不到文件 %1
+login.loginToken=使用访问令牌登录
+login.loginCookieString=使用 Cookie 字符串登录
+login.loginCookieNetscape=使用 Netscape 格式的 Cookie 登录
+login.loginCookieArray=使用 Cookie 数组登录
+login.loginPassword=使用邮箱和密码登录...
+login.accountError=请输入完整权限的令牌格式 %1 或 Cookie 字符串格式 %2，或者 Cookie 数组格式：\n[\n  { name: %3, value: %4 },\n  { name: %5, value: %6 }\n]\n 或者\n[\n  { key: %3, value: %4 },\n  { key: %5, value: %6 }\n]\n并填写到文件 %7 中。
+login.cannotFindAccount=找不到 Facebook 账户，请选择以下选项之一（输入数字选择或使用上下键选择，回车确认）：
+login.chooseAccount=使用邮箱和密码登录
+login.chooseToken=使用完整权限令牌登录
+login.chooseCookieString=使用 Cookie 字符串登录
+login.chooseCookieArray=使用 Cookie 数组登录
+login.loginWith=你选择了 %1
+login.inputEmail=请输入你的 Facebook 邮箱（ID）或电话号码：
+login.inputPassword=请输入你的密码：
+login.input2FA=请输入你的两步验证（2FA）代码（若未启用则留空）：
+login.inputToken=请输入完整权限令牌（以 EAAAA 开头）：
+login.inputCookieString=请输入 Cookie 字符串：
+login.inputCookieArray=请输入 Cookie 数组：
+login.refreshCookie=正在刷新 Cookie...
+login.refreshCookieError=刷新 Cookie 时出错
+login.refreshCookieSuccess=Cookie 刷新成功，请重启机器人以使用新 Cookie。
+login.refreshCookieWarning=你已启用自动刷新 Cookie 模式，但 config.json 文件中未配置邮箱和密码。
+login.tokenError=令牌无效或已过期。请将完整权限令牌格式 %1 填入文件 %2。
+login.cookieError=Cookie 无效或已过期。
+login.loginPasswordError=使用 config.json 中的邮箱和密码登录时出错。
+login.loginSuccess=登录成功
+login.loginError=登录时发生错误
+login.openDashboardSuccess=成功打开机器人管理页面
+login.openDashboardError=打开机器人管理页面时出错
+login.changeGbanData=数据已被更改，当前无法启动机器人！
+login.errorNoti=获取消息时发生错误
+login.refreshFbstateSuccess=刷新 %1 文件成功
+login.refreshFbstateError=刷新 %1 文件时发生错误
+login.youAreBanned=你已被 Goat-Bot 项目封禁
+login.runBot=机器人启动成功，开始接收用户消息
+login.notLoggedIn=发生错误，请重新检查你的 Facebook 账号
+login.callBackError=监听 MQTT 回调时出错
+login.userBanned=你已被封禁，无法使用机器人！
+login.checkGbanError=检查 GBAN 时出错，请尝试更新到最新版本（在命令行输入：node update）
+login.gbanMessage=你已于 %1 被 Goat-Bot 项目封禁，原因：%2\n» 时间：%3
+login.gbanMessageToDate=你已于 %1 被 Goat-Bot 项目封禁，原因：%2\n» 时间：%3\n» 到期时间：%4
+login.gbanAdminMessage=用户 %1 于 %2 被 Goat-Bot 项目封禁，原因：%3
+login.openServerUptimeSuccess=🚀 已启动 Uptime 服务器：%1
+login.openServerUptimeError=发生错误，无法打开 Uptime 服务器
+login.restartListenMessage=已启用 ListenMQTT 每隔 %1 重启
+login.stopRestartListenMessage=已关闭 ListenMQTT 自动重启
+login.restartListenMessageError=重启 ListenMQTT 时发生错误
+login.restartListenMessage2=ListenMQTT 重启成功
+login.refreshCookieAfter=%1 后刷新 Cookie
+login.listenMqttClose=ListenMQTT 已关闭
+login.listenMqttCloseByUser=ListenMQTT 已被用户手动关闭
+login.retryCheckLiveCookie=正在重新检查 Cookie 有效性... %1
+login.startBotSuccess=机器人已成功启动，开始接收消息
+
+version.tooOldVersion=您使用的 Goat-Bot 版本太旧，请在控制台输入命令 %1 以更新到最新版本。
+
+custom.refreshedFb_dtsg=fb_dtsg 和 jazoest 刷新成功
+custom.refreshedFb_dtsgError=刷新 fb_dtsg 和 jazoest 时出错
+
+loadData.loadThreadDataSuccess=已成功加载 %1 个群组的数据！
+loadData.loadUserDataSuccess=已成功加载 %1 个用户的数据！
+loadData.refreshingThreadData=正在更新群组信息...
+loadData.refreshThreadDataSuccess=已更新 %1 个群组的信息！
+loadData.refreshThreadDataError=更新群组信息时出错！
+
+loadScripts.loadScriptsError=%1 文件在加载时出错：
+loadScripts.loadScriptsNotMatchOrigin=%1 文件与 Github 项目的原始文件不匹配，请确保这些命令文件是可信的：
+loadScripts.NOT_FOUND=未在原始源代码中找到：
+loadScripts.NOT_MATCH=与原始源代码不匹配：
+
+socketIO.connected=已连接到 socket.io 服务器
+socketIO.error=连接 socket.io 服务器时出错
+
+handlerCheckData.cantCreateThread=ID 为 '%1' 的群组无法写入数据库！
+handlerCheckData.cantCreateUser=ID 为 '%1' 的用户无法写入数据库！
+
+handlerEvents.userBanned=你已被封禁使用该机器人\n» 原因：%1\n» 时间：%2\n» 用户 ID：%3
+handlerEvents.threadBanned=该群组已被封禁使用机器人\n» 原因：%1\n» 时间：%2\n» 群组 ID：%3
+handlerEvents.onlyAdminBox=该群组已开启仅管理员可使用机器人的模式
+handlerEvents.onlyAdminBot=❌ | 当前仅机器人的管理员可使用
+handlerEvents.commandNotFound=命令 "%1" 不存在，请输入 %2help 查看所有可用命令
+handlerEvents.commandNotFound2=你输入的命令不存在，请输入 %1help 查看所有可用命令
+handlerEvents.commandSyntaxError=命令语法错误，请输入 %1help %2 查看该命令的详细用法
+handlerEvents.onlyAdmin=❌ | 仅群组管理员可使用命令 "%1"
+handlerEvents.onlyAdminToUseOnReply=❌ | 仅群组管理员可使用 "%1" 命令的回复功能
+handlerEvents.onlyAdminToUseOnReaction=❌ | 仅群组管理员可使用 "%1" 命令的反应功能
+handlerEvents.onlyAdminBot2=❌ | 仅机器人管理员可使用命令 "%1"
+handlerEvents.onlyAdminBot2ToUseOnReply=❌ | 仅机器人管理员可使用 "%1" 命令的回复功能
+handlerEvents.onlyAdminBot2ToUseOnReaction=❌ | 仅机器人管理员可使用 "%1" 命令的反应功能
+handlerEvents.waitingForCommand=⏱ 当前处于指令冷却中，请在 %1 秒后重试
+handlerEvents.errorOccurred=❌ [ %1 ]\n命令 "%2" 执行时发生错误\n\n%3
+handlerEvents.errorOccurred2=❌ [ %1 ]\nonChat 执行 "%2" 命令时发生错误\n\n%3
+handlerEvents.errorOccurred3=❌ [ %1 ]\nonReply 执行 "%2" 命令时发生错误\n\n%3
+handlerEvents.errorOccurred4=❌ [ %1 ]\nonReaction 执行 "%2" 命令时发生错误\n\n%3
+handlerEvents.errorOccurred5=❌ [ %1 ]\nonEvent 执行 "%2" 命令时发生错误\n\n%3
+handlerEvents.errorOccurred6=❌ [ %1 ]\nonEvent 执行 "%2" 命令时发生错误\n\n%3
+handlerEvents.errorOccurred7=❌ [ %1 ]\nonAnyEvent 执行 "%2" 命令时发生错误\n\n%3
+handlerEvents.cannotFindCommandName=❌ 无法找到命令名称来执行此回复！
+handlerEvents.cannotFindCommand=❌ 无法找到命令 "%1" 来执行此回复！
+
+autoUptime.autoUptimeTurnedOn=自动 Uptime 模式已开启
+
+indexController.connectingMongoDB=正在连接 MongoDB 数据库
+indexController.connectMongoDBSuccess=成功连接 MongoDB 数据库！
+indexController.connectMongoDBError=连接 MongoDB 数据库时出错：
+indexController.connectingMySQL=正在连接 SQLITE 数据库
+indexController.connectMySQLSuccess=成功连接 SQLITE 数据库！
+indexController.connectMySQLError=连接 SQLITE 数据库时出错：
+
+updater.updateTooFast=请在最新提交后的 5 分钟后再进行更新，避免出错，剩余 %1 分 %2 秒
+updater.latestVersion=你已经使用的是最新版本
+updater.cantFindVersion=你正在使用未定义的版本 (%1)，请检查 package.json 文件
+updater.newVersions=有 %1 个新版本可供更新，正在开始更新...
+updater.updateSuccess=更新成功%1
+updater.configChanged=%1 已被更改，请重新检查 config.json 文件
+updater.installingPackages=正在安装机器人的依赖包...
+updater.installSuccess=依赖包安装成功，请重启机器人以应用新版本
+updater.backupSuccess=成功备份已修改文件，查看文件夹 %1
+updater.restartToApply=。重启机器人以应用新版本
+updater.skipFile=%1 文件有新版本，但你在更新过程中跳过了该文件（包含注释 %2）
+
+verifyfbid.sendCode=你的验证码是：\n%1\n该验证码有效期为 %2 分钟
+
+utils.errorOccurred=❌ 发生错误：\n\n%1
+
+command.restartedBot=机器人已重启
+
+app.googleApiRefreshTokenExpired=Google API 的刷新令牌已过期或被撤销，请访问 https://developers.google.com/oauthplayground/ 获取新令牌。
+app.tooManyRequests=一分钟内请求过多，请稍后再试。
+app.notPermissionChangeFbstate=你没有权限更改 fbstate！
+app.notFoundFbstate=请输入 fbstate！
+app.changedFbstateSuccess=fbstate 修改成功！
+app.serverError=服务器发生错误，请稍后再试！

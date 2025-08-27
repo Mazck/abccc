@@ -1,0 +1,28 @@
+[
+  {
+    "path": "$['dependencies'][5]['name']",
+    "value": "setPinnedMessage",
+    "parent": {
+      "name": "setPinnedMessage",
+      "value": {
+        "__dr": "LSSetPinnedMessage"
+      }
+    },
+    "parentProperty": "name",
+    "hasArrExpr": true,
+    "pointer": "/dependencies/5/name"
+  },
+  {
+    "path": "$['dependencies'][6]['name']",
+    "value": "deleteThenInsertMessage",
+    "parent": {
+      "name": "deleteThenInsertMessage",
+      "value": {
+        "__dr": "LSDeleteThenInsertMessage"
+      }
+    },
+    "parentProperty": "name",
+    "hasArrExpr": true,
+    "pointer": "/dependencies/6/name"
+  }
+]
