@@ -5,7 +5,7 @@ module.exports = {
     config: {
         name: "payment",
         aliases: ["pay", "thanhtoan"],
-        version: "2.0",
+        version: "2.1",
         author: "ABC Bot",
         countDown: 10,
         role: 0,
@@ -13,92 +13,11 @@ module.exports = {
             vi: "Quản lý thanh toán và kích hoạt bot cho nhóm",
             en: "Manage payment and bot activation for groups"
         },
-        category: "system",
-        guide: {
-            vi: "   {pn} info: Xem thông tin gói và trạng thái nhóm\n" +
-                "   {pn} buy <tên gói>: Mua gói dịch vụ\n" +
-                "   {pn} renew: Gia hạn dịch vụ hiện tại\n" +
-                "   {pn} packages: Xem danh sách các gói\n" +
-                "   {pn} history: Xem lịch sử thanh toán",
-            en: "   {pn} info: View package info and group status\n" +
-                "   {pn} buy <package>: Buy service package\n" +
-                "   {pn} renew: Renew current service\n" +
-                "   {pn} packages: View available packages\n" +
-                "   {pn} history: View payment history"
-        }
+        category: "system"
     },
 
-    langs: {
-        vi: {
-            noPermission: "❌ Chỉ admin nhóm mới có thể sử dụng lệnh này",
-            groupInfo: "📊 THÔNG TIN NHÓM\n\n" +
-                "🏷️ Trạng thái: %1\n" +
-                "📦 Gói hiện tại: %2\n" +
-                "⏰ Hết hạn: %3\n" +
-                "🔄 Số lần gia hạn: %4\n" +
-                "💎 Giảm giá gia hạn tiếp theo: %5%",
-            groupActive: "🟢 Đang hoạt động",
-            groupExpired: "🔴 Đã hết hạn",
-            groupInactive: "⚪ Chưa kích hoạt",
-            permanent: "Vĩnh viễn",
-            packages: "📦 DANH SÁCH GÓI DỊCH VỤ\n\n%1",
-            packageItem: "%1. %2\n   💰 Giá: %3đ\n   ⏱️ Thời hạn: %4 ngày\n   📝 %5\n\n",
-            invalidPackage: "❌ Gói không tồn tại. Sử dụng `%1payment packages` để xem danh sách",
-            paymentCreated: "💳 ĐÃ TẠO THANH TOÁN\n\n" +
-                "📦 Gói: %1\n" +
-                "💰 Giá gốc: %2đ\n" +
-                "🎁 Giảm giá: %3đ (%4%)\n" +
-                "💵 Thành tiền: %5đ\n" +
-                "⏰ Link có hiệu lực: 30 phút\n\n" +
-                "🔗 Link thanh toán: %6\n\n" +
-                "Hoặc quét mã QR đính kèm 👆",
-            paymentError: "❌ Có lỗi khi tạo thanh toán: %1",
-            noHistory: "📜 Nhóm chưa có lịch sử thanh toán nào",
-            history: "📜 LỊCH SỬ THANH TOÁN\n\n%1",
-            historyItem: "🔸 %1\n   💰 %2đ - %3\n   📅 %4\n\n",
-            renewSuccess: "✅ Gia hạn thành công!\n⏰ Hết hạn mới: %1",
-            renewError: "❌ Lỗi khi gia hạn: %1"
-        },
-        en: {
-            noPermission: "❌ Only group admins can use this command",
-            groupInfo: "📊 GROUP INFO\n\n" +
-                "🏷️ Status: %1\n" +
-                "📦 Current package: %2\n" +
-                "⏰ Expires: %3\n" +
-                "🔄 Renewal count: %4\n" +
-                "💎 Next renewal discount: %5%",
-            groupActive: "🟢 Active",
-            groupExpired: "🔴 Expired",
-            groupInactive: "⚪ Inactive",
-            permanent: "Permanent",
-            packages: "📦 AVAILABLE PACKAGES\n\n%1",
-            packageItem: "%1. %2\n   💰 Price: %3đ\n   ⏱️ Duration: %4 days\n   📝 %5\n\n",
-            invalidPackage: "❌ Package not found. Use `%1payment packages` to view list",
-            paymentCreated: "💳 PAYMENT CREATED\n\n" +
-                "📦 Package: %1\n" +
-                "💰 Original price: %2đ\n" +
-                "🎁 Discount: %3đ (%4%)\n" +
-                "💵 Final amount: %5đ\n" +
-                "⏰ Link valid for: 30 minutes\n\n" +
-                "🔗 Payment link: %6\n\n" +
-                "Or scan the QR code attached 👆",
-            paymentError: "❌ Payment creation error: %1",
-            noHistory: "📜 No payment history found for this group",
-            history: "📜 PAYMENT HISTORY\n\n%1",
-            historyItem: "🔸 %1\n   💰 %2đ - %3\n   📅 %4\n\n",
-            renewSuccess: "✅ Renewal successful!\n⏰ New expiry: %1",
-            renewError: "❌ Renewal error: %1"
-        }
-    },
-
-    onStart: async function ({ message, args, event, threadsData, getLang, role }) {
+    onStart: async function ({ message, args, event, threadsData, role }) {
         const { threadID, senderID } = event;
-
-        // Kiểm tra quyền admin nhóm (trừ lệnh info và packages)
-        if (!['info', 'packages'].includes(args[0]) && role < 1) {
-            return message.reply(getLang("noPermission"));
-        }
-
         const paymentHandler = new PaymentHandler();
         const subCommand = args[0]?.toLowerCase();
 
@@ -106,31 +25,26 @@ module.exports = {
             switch (subCommand) {
                 case "info":
                 case "status":
-                    await this.handleInfo(message, threadID, threadsData, getLang);
+                    await this.handleInfo(message, threadID, threadsData);
                     break;
-
                 case "packages":
                 case "pkg":
-                    await this.handlePackages(message, getLang);
+                    await this.handlePackages(message);
                     break;
-
                 case "buy":
-                case "mua":
-                    await this.handleBuy(message, args, threadID, senderID, threadsData, getLang, paymentHandler);
+                    if (role < 1) {
+                        return message.reply("❌ Chỉ admin nhóm mới có thể mua gói dịch vụ");
+                    }
+                    await this.handleBuy(message, args, threadID, senderID, threadsData, paymentHandler);
                     break;
-
-                case "renew":
-                case "giahan":
-                    await this.handleRenew(message, threadID, senderID, threadsData, getLang, paymentHandler);
+                case "admin":
+                    if (role < 2) {
+                        return message.reply("❌ Chỉ admin bot mới có thể sử dụng lệnh này");
+                    }
+                    await this.handleAdmin(message, args, threadID, threadsData);
                     break;
-
-                case "history":
-                case "lichsu":
-                    await this.handleHistory(message, threadID, getLang);
-                    break;
-
                 default:
-                    await this.handleInfo(message, threadID, threadsData, getLang);
+                    await this.handleInfo(message, threadID, threadsData);
                     break;
             }
         } catch (error) {
@@ -139,83 +53,108 @@ module.exports = {
         }
     },
 
-    // Xem thông tin nhóm
-    async handleInfo(message, threadID, threadsData, getLang) {
+    // Thông tin trạng thái nhóm
+    async handleInfo(message, threadID, threadsData) {
         const threadData = await threadsData.get(threadID);
-        const paymentHandler = new PaymentHandler();
+        const moment = require('moment-timezone');
+        const created = moment(threadData.createdAt);
+        const now = moment();
+        const freeTrialDays = global.GoatBot.config.freeTrialDays || 3;
+        const freeTrialExpires = created.clone().add(freeTrialDays, 'days');
 
-        const status = threadData.data?.status || 'inactive';
-        const packageType = threadData.data?.packageType || 'Chưa có';
+        let statusText = "⚪ Chưa kích hoạt";
+        let expiryText = "Không có";
+        let packageText = "Chưa có gói";
+
+        const status = threadData.data?.status;
         const expiresAt = threadData.data?.expiresAt;
-        const renewalCount = threadData.data?.renewalCount || 0;
         const isPermanent = threadData.data?.isPermanent;
+        const packageType = threadData.data?.packageType;
 
-        let statusText = getLang("groupInactive");
-        if (status === 'active') {
-            statusText = isPermanent ? `${getLang("groupActive")} (${getLang("permanent")})` : getLang("groupActive");
+        // Kiểm tra thời gian dùng thử
+        if (now.isBefore(freeTrialExpires) && (!status || status !== 'active')) {
+            const trialDaysLeft = freeTrialExpires.diff(now, 'days');
+            statusText = `🟡 Đang dùng thử (${trialDaysLeft} ngày còn lại)`;
+            expiryText = freeTrialExpires.format('DD/MM/YYYY HH:mm');
+        } else if (status === 'active') {
+            if (isPermanent) {
+                statusText = "🟢 Đang hoạt động (Vĩnh viễn)";
+                expiryText = "Vĩnh viễn";
+            } else {
+                statusText = "🟢 Đang hoạt động";
+                expiryText = moment(expiresAt).format('DD/MM/YYYY HH:mm');
+            }
+
+            if (packageType) {
+                const packageInfo = global.GoatBot.config.payos.package[packageType];
+                packageText = packageInfo ? packageInfo.name : packageType;
+            }
         } else if (status === 'expired') {
-            statusText = getLang("groupExpired");
+            statusText = "🔴 Đã hết hạn";
+            expiryText = moment(expiresAt).format('DD/MM/YYYY HH:mm');
         }
 
-        let expiryText = getLang("permanent");
-        if (expiresAt && !isPermanent) {
-            const moment = require('moment-timezone');
-            expiryText = moment(expiresAt).tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY HH:mm');
-        }
+        const renewalCount = threadData.data?.renewalCount || 0;
+        const discount = renewalCount > 0 ? this.calculateRenewalDiscount(renewalCount) : 0;
 
-        const renewalDiscount = paymentHandler.calculateRenewalDiscount(renewalCount);
+        const infoMessage =
+            `📊 THÔNG TIN NHÓM\n\n` +
+            `🏷️ Trạng thái: ${statusText}\n` +
+            `📦 Gói hiện tại: ${packageText}\n` +
+            `⏰ Hết hạn: ${expiryText}\n` +
+            `🔄 Số lần gia hạn: ${renewalCount}\n` +
+            `💎 Giảm giá gia hạn: ${discount}%\n\n` +
+            `📅 Nhóm tạo: ${created.format('DD/MM/YYYY HH:mm')}\n` +
+            `💳 Sử dụng "payment packages" để xem gói dịch vụ`;
 
-        const infoText = getLang("groupInfo",
-            statusText,
-            packageType,
-            expiryText,
-            renewalCount,
-            renewalDiscount
-        );
-
-        message.reply(infoText);
+        message.reply(infoMessage);
     },
 
-    // Xem danh sách gói
-    async handlePackages(message, getLang) {
+    // Danh sách gói dịch vụ
+    async handlePackages(message) {
         const packages = global.GoatBot.config.payos.package;
-        let packageText = "";
+        if (!packages) {
+            return message.reply("❌ Chưa cấu hình gói dịch vụ");
+        }
+
+        let packageText = "📦 DANH SÁCH GÓI DỊCH VỤ\n\n";
         let index = 1;
 
         for (const [key, pkg] of Object.entries(packages)) {
-            packageText += getLang("packageItem",
-                index++,
-                pkg.name,
-                pkg.price.toLocaleString(),
-                pkg.days,
-                pkg.description
-            );
+            packageText += `${index}. ${pkg.name}\n`;
+            packageText += `   💰 Giá: ${pkg.price.toLocaleString()}đ\n`;
+            packageText += `   ⏱️ Thời hạn: ${pkg.days} ngày\n`;
+            packageText += `   📝 ${pkg.description}\n`;
+            packageText += `   💳 Mua: payment buy ${key}\n\n`;
+            index++;
         }
 
-        message.reply(getLang("packages", packageText));
+        packageText += `🎁 Hoặc sử dụng mã redeem: redeem <mã>`;
+
+        message.reply(packageText);
     },
 
-    // Mua gói
-    async handleBuy(message, args, threadID, senderID, threadsData, getLang, paymentHandler) {
+    // Mua gói dịch vụ
+    async handleBuy(message, args, threadID, senderID, threadsData, paymentHandler) {
         const packageName = args[1]?.toLowerCase();
         if (!packageName) {
-            return this.handlePackages(message, getLang);
+            return this.handlePackages(message);
         }
 
         const packages = global.GoatBot.config.payos.package;
         const selectedPackage = packages[packageName];
 
         if (!selectedPackage) {
-            return message.reply(getLang("invalidPackage", global.utils.getPrefix(threadID)));
+            return message.reply(`❌ Gói "${packageName}" không tồn tại. Sử dụng "payment packages" để xem danh sách`);
         }
 
         try {
-            // Tính giảm giá nếu có
+            // Tính giảm giá
             const threadData = await threadsData.get(threadID);
             const renewalCount = threadData.data?.renewalCount || 0;
-            const discountPercent = paymentHandler.calculateRenewalDiscount(renewalCount);
+            const discountPercent = renewalCount > 0 ? this.calculateRenewalDiscount(renewalCount) : 0;
 
-            // Tạo thông tin thanh toán
+            // Tạo thanh toán
             const orderCode = paymentHandler.generateOrderCode();
             const paymentInfo = {
                 orderCode: orderCode,
@@ -224,13 +163,12 @@ module.exports = {
                 threadID: threadID,
                 userID: senderID,
                 packageType: packageName,
-                discountPercent: renewalCount > 0 ? discountPercent : 0
+                discountPercent: discountPercent
             };
 
-            // Tạo link thanh toán
             const paymentResult = await paymentHandler.createPaymentLink(paymentInfo);
 
-            // Lưu thông tin thanh toán vào database
+            // Lưu vào database
             const { paymentData } = global.db;
             await paymentData.create({
                 transactionId: orderCode.toString(),
@@ -239,12 +177,10 @@ module.exports = {
                 status: 'PENDING',
                 paymentLinkId: paymentResult.paymentLinkId,
                 description: paymentInfo.description,
-                packageType: packageName,
-                originalAmount: selectedPackage.price,
-                discountAmount: paymentResult.discountAmount
+                packageType: packageName
             });
 
-            // Tạo file QR tạm thời
+            // Tạo QR code
             let attachment = null;
             if (paymentResult.qrCode) {
                 try {
@@ -258,19 +194,17 @@ module.exports = {
                 }
             }
 
-            const replyText = getLang("paymentCreated",
-                selectedPackage.name,
-                selectedPackage.price.toLocaleString(),
-                paymentResult.discountAmount.toLocaleString(),
-                discountPercent,
-                paymentResult.amount.toLocaleString(),
-                paymentResult.checkoutUrl
-            );
+            const replyText =
+                `💳 ĐÃ TẠO THANH TOÁN\n\n` +
+                `📦 Gói: ${selectedPackage.name}\n` +
+                `💰 Giá gốc: ${selectedPackage.price.toLocaleString()}đ\n` +
+                (discountPercent > 0 ? `🎁 Giảm giá: ${paymentResult.discountAmount.toLocaleString()}đ (${discountPercent}%)\n` : '') +
+                `💵 Thành tiền: ${paymentResult.amount.toLocaleString()}đ\n` +
+                `⏰ Link có hiệu lực: 30 phút\n\n` +
+                `🔗 Link thanh toán: ${paymentResult.checkoutUrl}\n\n` +
+                `Hoặc quét mã QR đính kèm 👆`;
 
-            const messageData = {
-                body: replyText
-            };
-
+            const messageData = { body: replyText };
             if (attachment) {
                 messageData.attachment = attachment;
             }
@@ -279,60 +213,55 @@ module.exports = {
 
         } catch (error) {
             console.error('Payment creation error:', error);
-            message.reply(getLang("paymentError", error.message));
+            message.reply("❌ Có lỗi khi tạo thanh toán: " + error.message);
         }
     },
 
-    // Gia hạn
-    async handleRenew(message, threadID, senderID, threadsData, getLang, paymentHandler) {
-        const threadData = await threadsData.get(threadID);
+    // Admin commands
+    async handleAdmin(message, args, threadID, threadsData) {
+        const subCmd = args[1]?.toLowerCase();
 
-        if (!threadData.data?.packageType || threadData.data?.packageType === 'permanent') {
-            return message.reply("❌ Nhóm chưa có gói để gia hạn hoặc đã là gói vĩnh viễn");
-        }
+        switch (subCmd) {
+            case "activate":
+                const days = parseInt(args[2]) || 30;
+                const moment = require('moment-timezone');
+                const expiresAt = days > 0 ? moment().add(days, 'days').toISOString() : null;
 
-        const currentPackage = global.GoatBot.config.payos.package[threadData.data.packageType];
-        if (!currentPackage) {
-            return message.reply("❌ Không tìm thấy thông tin gói hiện tại");
-        }
+                await threadsData.set(threadID, {
+                    status: 'active',
+                    activatedAt: new Date().toISOString(),
+                    expiresAt: expiresAt,
+                    packageType: 'admin',
+                    manualActivation: true,
+                    isPermanent: days === 0
+                }, 'data');
 
-        // Sử dụng logic mua với gói hiện tại
-        const args = ['renew', threadData.data.packageType];
-        await this.handleBuy(message, args, threadID, senderID, threadsData, getLang, paymentHandler);
-    },
+                message.reply(`✅ Đã kích hoạt nhóm thành công!\n${days > 0 ? `⏰ Thời hạn: ${days} ngày` : '👑 Kích hoạt vĩnh viễn'}`);
+                break;
 
-    // Lịch sử thanh toán
-    async handleHistory(message, threadID, getLang) {
-        try {
-            const { paymentData } = global.db;
-            const payments = await paymentData.getByThreadID(threadID);
+            case "deactivate":
+                await threadsData.set(threadID, {
+                    status: 'expired',
+                    expiredAt: new Date().toISOString()
+                }, 'data');
 
-            if (!payments || payments.length === 0) {
-                return message.reply(getLang("noHistory"));
-            }
+                message.reply("❌ Đã hủy kích hoạt nhóm");
+                break;
 
-            let historyText = "";
-            const moment = require('moment-timezone');
-
-            payments.slice(0, 10).forEach(payment => { // Chỉ hiển thị 10 giao dịch gần nhất
-                const status = payment.status === 'PAID' ? '✅ Thành công' :
-                    payment.status === 'PENDING' ? '⏳ Đang chờ' : '❌ Thất bại';
-
-                const date = moment(payment.createdAt).tz('Asia/Ho_Chi_Minh').format('DD/MM/YY HH:mm');
-
-                historyText += getLang("historyItem",
-                    payment.transactionId,
-                    payment.amount.toLocaleString(),
-                    status,
-                    date
+            default:
+                message.reply(
+                    "🔧 ADMIN COMMANDS:\n\n" +
+                    "• payment admin activate [ngày] - Kích hoạt nhóm\n" +
+                    "• payment admin activate 0 - Kích hoạt vĩnh viễn\n" +
+                    "• payment admin deactivate - Hủy kích hoạt"
                 );
-            });
-
-            message.reply(getLang("history", historyText));
-
-        } catch (error) {
-            console.error('History error:', error);
-            message.reply("❌ Có lỗi khi lấy lịch sử thanh toán");
         }
+    },
+
+    calculateRenewalDiscount(renewalCount) {
+        const baseDiscount = 5;
+        const incrementDiscount = 2;
+        const maxDiscount = 20;
+        return Math.min(baseDiscount + (renewalCount * incrementDiscount), maxDiscount);
     }
 };

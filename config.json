@@ -1,0 +1,140 @@
+{
+  "facebookAccount": {
+    "email": "",
+    "password": "",
+    "2FASecret": "",
+    "i_user": "",
+    "proxy": null,
+    "userAgent": "Mozilla/5.0 (Linux; Android 12; M2102J20SG) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.0.0 Mobile Safari/537.36",
+    "intervalGetNewCookie": 1440,
+    "notes": ""
+  },
+  "dashBoard": {
+    "enable": true,
+    "serverURL": "http://localhost:5001",
+    "botId": "bot",
+    "notes": ""
+  },
+  "antiInbox": false,
+  "language": "vi",
+  "notesLanguage": "",
+  "nickNameBot": "ABC Bot",
+  "prefix": "đ-",
+  "adminOnly": {
+    "enable": false,
+    "ignoreCommand": []
+  },
+  "adminBot": [
+    "100038946913086"
+  ],
+  "whiteListMode": {
+    "enable": false,
+    "whiteListIds": [],
+    "notes": ""
+  },
+  "whiteListModeThread": {
+    "enable": false,
+    "whiteListThreadIds": [],
+    "notes": "",
+    "how_it_work": ""
+  },
+  "database": {
+    "type": "sqlite",
+    "uriMongodb": "",
+    "autoSyncWhenStart": false,
+    "autoRefreshThreadInfoFirstTime": true,
+    "notes": ""
+  },
+  "timeZone": "Asia/Ho_Chi_Minh",
+  "autoRestart": {
+    "time": "",
+    "notes": ""
+  },
+  "autoUptime": {
+    "enable": true,
+    "timeInterval": 180,
+    "url": "",
+    "notes": ""
+  },
+  "autoLoadScripts": {
+    "enable": true,
+    "ignoreCmds": "",
+    "ignoreEvents": "",
+    "notes": ""
+  },
+  "autoRefreshFbstate": true,
+  "autoReloginWhenChangeAccount": false,
+  "autoRestartWhenListenMqttError": false,
+  "restartListenMqtt": {
+    "enable": true,
+    "timeRestart": 3600000,
+    "delayAfterStopListening": 2000,
+    "logNoti": true,
+    "notes": ""
+  },
+  "hideNotiMessage": {
+    "commandNotFound": false,
+    "adminOnly": false,
+    "threadBanned": false,
+    "userBanned": false,
+    "needRoleToUseCmd": false,
+    "needRoleToUseCmdOnReply": false,
+    "needRoleToUseCmdOnReaction": false
+  },
+  "logEvents": {
+    "disableAll": false,
+    "message": true,
+    "message_reaction": true,
+    "message_unsend": true,
+    "message_reply": true,
+    "event": true,
+    "read_receipt": false,
+    "typ": false,
+    "presence": false
+  },
+  "optionsFca": {
+    "forceLogin": true,
+    "listenEvents": true,
+    "updatePresence": true,
+    "listenTyping": true,
+    "logLevel": "error",
+    "selfListen": true,
+    "selfListenEvent": false,
+    "autoMarkDelivery": false,
+    "autoReconnect": true,
+    "notes": ""
+  },
+  "auto": {
+    "audodownload": true
+  },
+  "payos": {
+    "enable": true,
+    "clientId": "YOUR_PAYOS_CLIENT_ID",
+    "apiKey": "YOUR_PAYOS_API_KEY",
+    "checksumKey": "YOUR_PAYOS_CHECKSUM_KEY",
+    "webhookUrl": "https://your-domain.com",
+    "cancelUrl": "https://your-domain.com/payment-cancel",
+    "returnUrl": "https://your-domain.com/payment-success",
+    "package": {
+      "basic": {
+        "name": "Gói Cơ Bản",
+        "price": 50000,
+        "days": 30,
+        "description": "Gói cơ bản 1 tháng, đầy đủ tính năng"
+      },
+      "premium": {
+        "name": "Gói Premium",
+        "price": 100000,
+        "days": 60,
+        "description": "Gói premium 2 tháng, ưu tiên hỗ trợ"
+      },
+      "vip": {
+        "name": "Gói VIP",
+        "price": 200000,
+        "days": 90,
+        "description": "Gói VIP 3 tháng, tính năng độc quyền"
+      }
+    }
+  },
+  "freeTrialDays": 3
+}

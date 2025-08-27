@@ -205,18 +205,21 @@ if (config.autoRestart) {
 	}
 }
 
+const PaymentIntegration = require('./bot/handler/paymentIntegration.js');
+
 (async () => {
-	require(`./bot/login/login${NODE_ENV === 'development' ? '.dev.js' : '.js'}`);
+	if (global.GoatBot.config.payos?.enable) {
+		try {
+			global.paymentSystem = new PaymentIntegration();
+			await global.paymentSystem.initialize();
+			console.log('✅ Payment system initialized successfully');
+		} catch (error) {
+			console.error('❌ Failed to initialize payment system:', error);
+		}
+	}
 })();
 
-function compareVersion(version1, version2) {
-	const v1 = version1.split(".");
-	const v2 = version2.split(".");
-	for (let i = 0; i < 3; i++) {
-		if (parseInt(v1[i]) > parseInt(v2[i]))
-			return 1; // version1 > version2
-		if (parseInt(v1[i]) < parseInt(v2[i]))
-			return -1; // version1 < version2
-	}
-	return 0; // version1 = version2
-}
+
+(async () => {
+	require(`./bot/login/login.js`);
+})();

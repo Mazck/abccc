@@ -241,6 +241,112 @@ module.exports = function (api, threadModel, userModel, dashBoardModel, globalMo
 			|							 WHEN CALL COMMAND								|
 			+-----------------------------------------------+
 		*/
+
+		async function checkGroupAccess(threadID, senderID) {
+			try {
+				const { threadsData } = global.db;
+				const config = global.GoatBot.config;
+
+				// Admin bot luôn có quyền truy cập
+				if (config.adminBot && config.adminBot.includes(senderID)) {
+					return { allowed: true };
+				}
+
+				const threadData = await threadsData.get(threadID);
+				const groupStatus = threadData.data?.status;
+				const expiresAt = threadData.data?.expiresAt;
+				const isPermanent = threadData.data?.isPermanent;
+				const createdAt = threadData.createdAt;
+
+				// Kiểm tra thời gian dùng thử miễn phí
+				const moment = require('moment-timezone');
+				const now = moment();
+				const created = moment(createdAt);
+				const freeTrialDays = config.freeTrialDays || 3;
+				const freeTrialExpires = created.add(freeTrialDays, 'days');
+
+				// Nếu trong thời gian dùng thử và chưa hết hạn
+				if (now.isBefore(freeTrialExpires) && (!groupStatus || groupStatus !== 'active')) {
+					return { allowed: true, isTrial: true };
+				}
+
+				// Kiểm tra trạng thái nhóm đã kích hoạt
+				if (!groupStatus || groupStatus !== 'active') {
+					return {
+						allowed: false,
+						message: await generateActivationMessage(threadID, threadData)
+					};
+				}
+
+				// Kiểm tra hết hạn (trừ permanent)
+				if (!isPermanent && expiresAt) {
+					const expiry = moment(expiresAt);
+					if (now.isAfter(expiry)) {
+						// Cập nhật trạng thái hết hạn
+						await threadsData.set(threadID, {
+							status: 'expired',
+							expiredAt: new Date().toISOString()
+						}, 'data');
+
+						return {
+							allowed: false,
+							message: await generateActivationMessage(threadID, threadData, true)
+						};
+					}
+				}
+
+				return { allowed: true };
+
+			} catch (error) {
+				console.error('Error checking group access:', error);
+				return { allowed: true }; // Cho phép sử dụng nếu có lỗi
+			}
+		}
+
+		async function generateActivationMessage(threadID, threadData, isExpired = false) {
+			const config = global.GoatBot.config.payos;
+			const prefix = global.utils.getPrefix(threadID);
+
+			if (!config || !config.enable) {
+				return "❌ Hệ thống thanh toán chưa được cấu hình";
+			}
+
+			const packages = Object.entries(config.package);
+			const renewalCount = threadData.data?.renewalCount || 0;
+
+			let message = isExpired ?
+				`❌ NHÓM ĐÃ HẾT HẠN\n\n` :
+				`🔒 NHÓM CHƯA ĐƯỢC KÍCH HOẠT\n\n`;
+
+			message += `📦 CÁC GÓI DỊCH VỤ HIỆN CÓ:\n\n`;
+
+			packages.forEach(([key, pkg], index) => {
+				const discount = renewalCount > 0 ? calculateRenewalDiscount(renewalCount) : 0;
+				const finalPrice = pkg.price * (1 - discount / 100);
+
+				message += `${index + 1}. ${pkg.name}\n`;
+				message += `   💰 Giá: ${pkg.price.toLocaleString()}đ`;
+				if (discount > 0) {
+					message += ` → ${finalPrice.toLocaleString()}đ (giảm ${discount}%)`;
+				}
+				message += `\n   ⏰ Thời hạn: ${pkg.days} ngày\n`;
+				message += `   📝 ${pkg.description}\n`;
+				message += `   💳 Mua: ${prefix}payment buy ${key}\n\n`;
+			});
+
+			message += `🎁 Hoặc sử dụng mã redeem: ${prefix}redeem <mã>\n`;
+			message += `📞 Liên hệ admin để được hỗ trợ!`;
+
+			return message;
+		}
+
+		function calculateRenewalDiscount(renewalCount) {
+			const baseDiscount = 5;
+			const incrementDiscount = 2;
+			const maxDiscount = 20;
+			return Math.min(baseDiscount + (renewalCount * incrementDiscount), maxDiscount);
+		}
+
 		let isUserCallCommand = false;
 		async function onStart() {
 			// —————————————— CHECK USE BOT —————————————— //
@@ -251,6 +357,27 @@ module.exports = function (api, threadModel, userModel, dashBoardModel, globalMo
 			// ————————————  CHECK HAS COMMAND ——————————— //
 			let commandName = args.shift().toLowerCase();
 			let command = GoatBot.commands.get(commandName) || GoatBot.commands.get(GoatBot.aliases.get(commandName));
+			const allowedCommands = ['payment', 'pay', 'thanhtoan', 'redeem', 'code', 'giftcode', 'help', 'info'];
+
+			if (command && !allowedCommands.includes(commandName)) {
+				const accessCheck = await checkGroupAccess(threadID, senderID);
+				if (!accessCheck.allowed) {
+					return await message.reply(accessCheck.message);
+				}
+
+				// Thông báo nếu đang trong thời gian dùng thử
+				if (accessCheck.isTrial) {
+					const moment = require('moment-timezone');
+					const threadData = await threadsData.get(threadID);
+					const created = moment(threadData.createdAt);
+					const freeTrialExpires = created.add(global.GoatBot.config.freeTrialDays || 3, 'days');
+					const daysLeft = freeTrialExpires.diff(moment(), 'days');
+
+					if (daysLeft <= 1) {
+						await message.reply(`⚠️ THÔNG BÁO: Thời gian dùng thử còn ${daysLeft} ngày. Sử dụng "${prefix}payment" để kích hoạt vĩnh viễn!`);
+					}
+				}
+			}
 			// ———————— CHECK ALIASES SET BY GROUP ———————— //
 			const aliasesData = threadData.data.aliases || {};
 			for (const cmdName in aliasesData) {
@@ -278,6 +405,8 @@ module.exports = function (api, threadModel, userModel, dashBoardModel, globalMo
 					return body.replace(new RegExp(`^${prefix}(\\s+|)${commandName}`, "i"), "").trim();
 				}
 			}
+
+			
 			// —————  CHECK BANNED OR ONLY ADMIN BOX  ————— //
 			if (isBannedOrOnlyAdmin(userData, threadData, senderID, threadID, isGroup, commandName, message, langCode))
 				return;
